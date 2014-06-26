@@ -1,31 +1,27 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String
 from app import db
 
-engine = create_engine('sqlite:///database.db', echo=True)
-db_session = scoped_session(sessionmaker(autocommit=False,
-                                         autoflush=False,
-                                         bind=engine))
-Base = declarative_base()
-Base.query = db_session.query_property()
-
-# Set your classes here.
-
-'''
-class User(Base):
-    __tablename__ = 'Users'
-
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), unique=True)
-    email = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(30))
+    name = db.Column(db.Integer(120), unique=True)
+    email = db.Column(db.Integer(120), unique=True)
+    configkey = db.Column(db.Integer(200), unique=True)
+    dob = db.Column(db.DateTime)
+    country = db.Column(db.Integer(120))
+    friends = db.relationship('Friend', backref = 'friendof', lazy = 'dynamic')
 
-    def __init__(self, name=None, password=None):
-        self.name = name
-        self.password = password
-'''
 
-# Create tables.
-Base.metadata.create_all(bind=engine)
+    def __repr__(self):
+        return '<User %r>' % (self.name)
+
+class Friend(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Integer(120), unique=True)
+    email = db.Column(db.Integer(120))
+    dob = db.Column(db.DateTime)
+    country = db.Column(db.Integer(120))
+    lastmessage = db.Column(db.Integer(1500))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
+    def __repr__(self):
+        return '<FriendName %r>' % (self.name)

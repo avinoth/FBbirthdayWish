@@ -1,119 +1,73 @@
-<!doctype html>
-<head>
-<meta charset="utf-8">
-<title>{% block title %}{% endblock %}</title>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <!--Google Fonts-->
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+        <!--Font Awesome CSS file -->
+        <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+        <!--Bootstrap CSS file -->
+        <link href="/static/css/bootstrap-3.0.0.min.css" rel="stylesheet" />
+        <!--Custom stylesheet-->
+        <link rel="stylesheet" href="/static/css/template.css" />
+        <!--custom Javascript file-->
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    </head>
+    <style media="screen" type="text/css">
+        html {
+            position: relative;
+            min-height: 100%;
+            }
+        body {
+        /* Margin bottom by footer height */
+            margin-bottom: 60px;
+            }
+        #footer {
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          /* Set the fixed height of the footer here */
+          height: 60px;
+          background-color: #f5f5f5;
+          word-spacing: 15px
 
-<!-- meta -->
-<meta name="description" content="">
-<meta name="author" content="">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<!-- /meta -->
 
-<!-- styles -->
-<link type="text/css" rel="stylesheet" href="/static/css/font-awesome-3.2.1.min.css" />
-<link type="text/css" rel="stylesheet" href="/static/css/bootstrap-3.0.0.min.css">
-<link type="text/css" rel="stylesheet" href="/static/css/bootstrap-theme-3.0.0.min.css" />
-<link type="text/css" rel="stylesheet" href="/static/css/layout.main.css" />
-<link type="text/css" rel="stylesheet" href="/static/css/main.css" />
-<link type="text/css" rel="stylesheet" href="/static/css/main.responsive.css" />
-<link type="text/css" rel="stylesheet" href="/static/css/main.quickfix.css" />
-<!-- /styles -->
+        }
+    </style>
 
-<!-- favicons -->
-<link rel="shortcut icon" href="/static/ico/favicon.png">
-<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/static/ico/apple-touch-icon-144-precomposed.png">
-<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/ico/apple-touch-icon-114-precomposed.png">
-<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/ico/apple-touch-icon-72-precomposed.png">
-<link rel="apple-touch-icon-precomposed" href="/static/ico/apple-touch-icon-57-precomposed.png">
-<link rel="shortcut icon" href="/static/ico/favicon.png">
-<!-- /favicons -->
-
-<!-- scripts -->
-<script src="/static/js/libs/modernizr-2.6.2.min.js"></script>
-<!--[if lt IE 9]><script src="/static/js/libs/respond-1.3.0.min.js"></script><![endif]-->
-<!-- /scripts -->
-
-</head>
-<body>
-
-  <!-- Wrap all page content here -->
-  <div id="wrap">
-
-    <!-- Fixed navbar -->
-    <div class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">Project name</a>
-        </div>
-        <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li {% if request.endpoint == 'home' %} class="active" {% endif %}><a href="{{ url_for('home') }}">Home</a></li>
-            <li {% if request.endpoint == 'about' %} class="active" {% endif %}><a href="{{ url_for('about') }}">About</a></li>
-            <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a>Action</a></li>
-                <li><a>Another action</a></li>
-                <li><a>Something else here</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a>Separated link</a></li>
-                <li><a>One more separated link</a></li>
-              </ul>
-            </li>
-          </ul>
-          <ul class="nav navbar-nav pull-right">
-            <li><a href="{{ url_for('register') }}">Signup</a></li>
-            <li><a href="{{ url_for('login') }}">Login</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </div>
-
-    <!-- Begin page content -->
-    <main id="content" role="main" class="container">
-
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          {% for message in messages %}
-            <div class="alert alert-block alert-error fade in">
-              <a class="close" data-dismiss="alert">&times;</a>
-              {{ message }}
+    <body>
+    <nav class="navbar navbar-inverse custnav navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#example-navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                     <a class="navbar-brand" href="/">quickish</a>
+                </div>
+                <div class="collapse navbar-collapse" id="example-navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                <li><div class="btn-group">
+                    <a href = "{{ url_for('login') }}">
+                    <button type="button" class='btn navbar-btn btn-primary disabled'><i class="fa fa-facebook" style="width:16px; height:20px"></i></button>
+                    <button type="button" class='btn navbar-btn btn-primary' style="width:12em; height:37px"> Sign in with Facebook</buttone>
+                </a></div></li>
+                </ul>
+                </div>
             </div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
+        </nav>
+        {% block content %}{% endblock %}
 
-      {% block content %}{% endblock %}
-      
-    </main>
 
-  </div>
+        <div id="footer">
+            <div class="container">
 
-  <div id="footer">
-    <div class="container">
-      <p>Your Company &copy; All Rights Reserved.</p>
-      {% block footer %}{% endblock %}
-    </div>
-  </div>
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('about') }}">About</a>
+            </div>
+        </div>
 
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="/static/js/libs/jquery-1.10.2.min.js"><\/script>')</script>
-  <script defer src="/static/js/libs/bootstrap-3.0.0.min.js"></script>
-  <script defer src="/static/js/plugins.js"></script>
-  <script defer src="/static/js/script.js"></script>
-  <!-- Google Analytics - Change UA-XXXXX-X to be your site's ID -->
-  <script>
-  window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
-  Modernizr.load({
-    load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
-  });
-  </script>
-
-</body>
+    </body>
 </html>

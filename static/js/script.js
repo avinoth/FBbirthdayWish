@@ -1,3 +1,20 @@
-(function() {
+$(document).ready(function(){
 
-}).call(this);
+    
+    $("#jsend").mouseenter(function(){
+        $(this).hide();
+        $("#jsin").fadeIn("slow");
+    });
+    
+    $('#jsin').mouseleave(function(){
+        $(this).hide();
+        $('#jsend').fadeIn("slow");
+    });
+    
+
+
+});
+
+
+
+

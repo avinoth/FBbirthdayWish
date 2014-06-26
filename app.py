@@ -2,7 +2,7 @@
 # Imports.
 #----------------------------------------------------------------------------#
 
-from flask import * # do not use '*'; actually input the dependencies.
+from flask import Flask, redirect, url_for, session, request, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 import logging
 from logging import Formatter, FileHandler
@@ -14,7 +14,8 @@ from forms import *
 
 app = Flask(__name__)
 app.config.from_object('config')
-#db = SQLAlchemy(app)
+db = SQLAlchemy(app)
+
 
 # Automatically tear down SQLAlchemy.
 '''
@@ -39,6 +40,7 @@ def login_required(test):
 # Controllers.
 #----------------------------------------------------------------------------#
 
+
 @app.route('/')
 def home():
     return render_template('pages/placeholder.home.html')
@@ -49,18 +51,8 @@ def about():
 
 @app.route('/login')
 def login():
-    form = LoginForm(request.form)
-    return render_template('forms/login.html', form = form)
+    return render_template('login.html')
 
-@app.route('/register')
-def register():
-    form = RegisterForm(request.form)
-    return render_template('forms/register.html', form = form)
-
-@app.route('/forgot')
-def forgot():
-    form = ForgotForm(request.form)
-    return render_template('forms/forgot.html', form = form)
 
 # Error handlers.
 
@@ -96,3 +88,4 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
 '''
+
