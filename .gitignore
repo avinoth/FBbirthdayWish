@@ -6,3 +6,5 @@ env
 secret_key.py
 config.py
 secret_key.py.pub
+.project
+.pydevproject
