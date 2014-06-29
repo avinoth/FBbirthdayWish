@@ -1,5 +1,15 @@
 {% extends 'layouts/main.html' %}
 {% block title %}About{% endblock %}
+
+{% block navbtn %}
+<li>
+	<div class="btn-group">
+		<button type="button" class='btn navbar-btn btn-primary disabled'><i class="fa fa-facebook" style="width:16px; height:20px"></i></button>
+        <button type="button" class='btn navbar-btn btn-primary' style="width:12em; height:37px"> Sign in with Facebook</buttone>
+    </div>
+</li>
+{% endblock %}
+
 {% block content %}
 
 <div class ="container">

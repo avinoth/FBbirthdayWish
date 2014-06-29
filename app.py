@@ -7,7 +7,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 import logging
 from logging import Formatter, FileHandler
 from forms import *
-
+from flask_oauth import OAuth
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
@@ -15,6 +15,21 @@ from forms import *
 app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app)
+oauth = OAuth()
+
+FACEBOOK_APP_ID = app.config["FACEBOOK_APP_ID"]
+FACEBOOK_APP_SECRET = app.config["FACEBOOK_APP_SECRET"]
+
+
+facebook = oauth.remote_app('facebook',
+    base_url='https://graph.facebook.com/',
+    request_token_url=None,
+    access_token_url='/oauth/access_token',
+    authorize_url='https://www.facebook.com/dialog/oauth',
+    consumer_key=FACEBOOK_APP_ID,
+    consumer_secret=FACEBOOK_APP_SECRET,
+    request_token_params={'scope': 'email'}
+)
 
 
 # Automatically tear down SQLAlchemy.
@@ -36,6 +51,9 @@ def login_required(test):
             return redirect(url_for('login'))
     return wrap
 '''
+
+
+
 #----------------------------------------------------------------------------#
 # Controllers.
 #----------------------------------------------------------------------------#
@@ -51,8 +69,29 @@ def about():
 
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    return facebook.authorize(callback=url_for('facebook_authorized',
+        next=request.args.get('next') or request.referrer or None,
+        _external=True))
 
+@app.route('/login/authorized')
+@facebook.authorized_handler
+def facebook_authorized(resp):
+    next_url = request.args.get('next') or url_for('home')
+    if resp is None:
+        return 'Access denied: reason=%s error=%s' % (
+            request.args['error_reason'],
+            request.args['error_description']
+        )
+        return redirect(next_url)
+    session['oauth_token'] = (resp['access_token'], '')
+    me = facebook.get('/me')
+    return 'Logged in as id=%s name=%s redirect=%s' % \
+        (me.data['id'], me.data['name'], request.args.get('next'))
+
+
+@facebook.tokengetter
+def get_facebook_oauth_token():
+    return session.get('oauth_token')
 
 # Error handlers.
 
@@ -73,6 +112,8 @@ if not app.debug:
     file_handler.setLevel(logging.INFO)
     app.logger.addHandler(file_handler)
     app.logger.info('errors')
+    
+
 
 #----------------------------------------------------------------------------#
 # Launch.
