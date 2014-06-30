@@ -58,6 +58,13 @@ def login_required(test):
 # Controllers.
 #----------------------------------------------------------------------------#
 
+@facebook.tokengetter
+def get_facebook_oauth_token():
+    return session.get('oauth_token')
+
+def pop_login_session():
+    session.pop('logged_in', None)
+    session.pop('oauth_token', None)
 
 @app.route('/')
 def home():
@@ -70,28 +77,45 @@ def about():
 @app.route('/login')
 def login():
     return facebook.authorize(callback=url_for('facebook_authorized',
-        next=request.args.get('next') or request.referrer or None,
-        _external=True))
+        next=request.args.get('next'), _external=True))
+
 
 @app.route('/login/authorized')
 @facebook.authorized_handler
 def facebook_authorized(resp):
-    next_url = request.args.get('next') or url_for('home')
-    if resp is None:
+    next_url = request.args.get('next') or url_for('profile')
+    if resp is None or 'access_token' not in resp:
         return 'Access denied: reason=%s error=%s' % (
             request.args['error_reason'],
-            request.args['error_description']
-        )
+            request.args['error_description'])
         return redirect(next_url)
+    session['logged_in'] = True
     session['oauth_token'] = (resp['access_token'], '')
+    
+    return redirect(next_url)
+
+@app.route("/logout")
+def logout():
+    pop_login_session()
+    return redirect(url_for('about'))
+
+
+@app.route('/profile')
+def profile():
     me = facebook.get('/me')
-    return 'Logged in as id=%s name=%s redirect=%s' % \
-        (me.data['id'], me.data['name'], request.args.get('next'))
+    name = me.data['name']
+    fname = me.data['first_name']
+    lname = me.data['last_name']
+    uname = me.data['username']
+    gender - me.data['gender']
+    id = me.data['id']
+    email = me.data['email']
+    return render_template('pages/profile.html',
+                            user = fname,
+                            name = name,
+                            id = id,
+                            email = email)
 
-
-@facebook.tokengetter
-def get_facebook_oauth_token():
-    return session.get('oauth_token')
 
 # Error handlers.
 
@@ -103,6 +127,9 @@ def internal_error(error):
 @app.errorhandler(404)
 def internal_error(error):
     return render_template('errors/404.html'), 404
+
+
+
 
 if not app.debug:
     file_handler = FileHandler('error.log')
