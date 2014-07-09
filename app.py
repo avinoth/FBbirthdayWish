@@ -106,8 +106,8 @@ def profile():
     name = me.data['name']
     fname = me.data['first_name']
     lname = me.data['last_name']
-    uname = me.data['username']
-    gender - me.data['gender']
+    #uname = me.data['username']
+    #gender - me.data['gender']
     id = me.data['id']
     email = me.data['email']
     return render_template('pages/profile.html',
